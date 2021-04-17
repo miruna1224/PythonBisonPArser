@@ -1,0 +1,1 @@
+./executabil.exe < test.py
