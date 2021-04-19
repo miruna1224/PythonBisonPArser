@@ -255,7 +255,7 @@ salt_end:
     BREAK
     | CONTINUE
     | RETURN
-    | RETURN expresie ;
+    | RETURN expresie;
 
 
 expresie:

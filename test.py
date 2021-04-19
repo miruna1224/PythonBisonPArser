@@ -74,3 +74,4 @@ if __name__ == "__main__" :
                 if not (a < b) :
                     print ("mesaj11")
     f = not a
+    return a

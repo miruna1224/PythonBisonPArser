@@ -113,7 +113,7 @@ declarator :
 
 
 %type <sir> declarare_functie;
-declarare_functie: 
+declarare_functie:
     IF NAME EGAL_LOGIC STRING DOUA_PUNCTE instructiune                                         { strcpy($$, $4); printf ("Declarare modul %s\n", $4); }
     | DEF INIT ROTUNDA_DESCHISA parametrii ROTUNDA_INCHISA DOUA_PUNCTE instructiune            { printf ("A fost declarat un constructor \n"); }
     | DEF IDENTIFICATOR ROTUNDA_DESCHISA parametrii ROTUNDA_INCHISA DOUA_PUNCTE instructiune   { printf ("A fost declarata functia %s\n", $2); }
@@ -145,11 +145,34 @@ while_for:
     | FOR  IDENTIFICATOR IN RANGE ROTUNDA_DESCHISA IDENTIFICATOR_COMPUS VIRGULA IDENTIFICATOR_COMPUS ROTUNDA_INCHISA DOUA_PUNCTE instructiune     { printf ("Am intalnit instructiunea For\n"); };
 
 
+%type <sir> IDENTIFICATOR_COMPUS;
+IDENTIFICATOR_COMPUS:
+    IDENTIFICATOR                                                                                    { strcpy ($$, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR                                                       { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR ROTUNDA_DESCHISA argumente ROTUNDA_INCHISA            { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Apelez functia \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA IDENTIFICATOR PATRATA_INCHISA        { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA INTREG PATRATA_INCHISA               { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); };
+
+
+argumente:
+    %empty
+    | tip_argumente
+    | argumente VIRGULA tip_argumente;
+
+
+tip_argumente:
+   INTREG
+   | REAL
+   | STRING
+   | CARACTER
+   | IDENTIFICATOR_COMPUS;
+
+
 salt_end:
-    BREAK
-    | CONTINUE
-    | RETURN
-    | RETURN expresie ;
+    BREAK                 { printf ("Instructiune de salt\n");}
+    | CONTINUE            { printf ("Instructiune de salt\n");}
+    | RETURN              { printf ("Instructiune de salt\n");}
+    | RETURN expresie     { printf ("Instructiune de salt\n");};
 
 
 expresie:
@@ -172,15 +195,6 @@ expresie:
     | CARACTER                                                                  { printf ("Caracter: %c\n", $1); };
 
 
-%type <sir> IDENTIFICATOR_COMPUS;
-IDENTIFICATOR_COMPUS:
-    IDENTIFICATOR                                                                             { strcpy ($$, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR                                                { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR ROTUNDA_DESCHISA argumente ROTUNDA_INCHISA     { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Apelez functia \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA IDENTIFICATOR PATRATA_INCHISA { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA INTREG PATRATA_INCHISA        { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); };
-
-
 R:
     OR
     | AND
@@ -198,20 +212,6 @@ A:
     | INMULTIT
     | IMPARTIT
     | MOD;
-
-
-argumente:
-    %empty
-    | tip_argumente
-    | argumente VIRGULA tip_argumente;
-
-
-tip_argumente:
-   INTREG
-   | REAL
-   | STRING
-   | CARACTER
-   | IDENTIFICATOR_COMPUS;
 
 
 declarare_clasa:
