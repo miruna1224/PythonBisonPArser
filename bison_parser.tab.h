@@ -81,11 +81,13 @@ extern int yydebug;
     PASS = 291,
     IN = 292,
     RANGE = 293,
-    IDENTIFICATOR = 294,
-    INTREG = 295,
-    REAL = 296,
-    STRING = 297,
-    CARACTER = 298
+    INIT = 294,
+    NAME = 295,
+    IDENTIFICATOR = 296,
+    INTREG = 297,
+    REAL = 298,
+    STRING = 299,
+    CARACTER = 300
   };
 #endif
 
@@ -94,14 +96,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 54 "bison_parser.y" /* yacc.c:1909  */
+#line 57 "bison_parser.y" /* yacc.c:1909  */
 
     int intreg;
     float real;
     char sir[128];
     char caracter;
 
-#line 105 "bison_parser.tab.h" /* yacc.c:1909  */
+#line 107 "bison_parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

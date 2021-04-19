@@ -53,6 +53,9 @@ class C (A):
 if __name__ == "__main__" :
     a = 1
     b = 1
+    v = [ 0 for i in range (10) ]
+    v = [ 0 for i in range (1, 10) ]
+    v = [ 0 for i in j ]
     while a == b :
         for i in range (1, 10):
             v[i] = i * 2
@@ -70,3 +73,4 @@ if __name__ == "__main__" :
                     print ("mesaj10")
                 if not (a < b) :
                     print ("mesaj11")
+    f = not a

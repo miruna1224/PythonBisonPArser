@@ -1,4 +1,110 @@
 %{
+
+Niga Alexandru-Constantin
+Floroiu Miruna
+
+grupa 334, semigrupa 1
+
+  Proiectul nostru este format din 4 fisiere:
+    lex.l
+    bison_parser.y
+    commands.sh -> pentru a rula din terminal toate comenzile
+    test.py -> fisierul de test
+
+}%
+
+
+
+
+
+
+
+
+%{ lex.l }%
+
+%{
+    #include <stdio.h>
+    #include <string.h>
+    #include "bison_parser.tab.h"
+%}
+
+COMENTARIU_LINIE #.*
+BLANK [[:space:]]
+CIFRA [0-9]
+NUMAR [+-]?[0-9]*[.]?[0-9]+
+CARACTER '[a-zA-Z]'
+NAME  [a-zA-Z_][a-zA-Z0-9_]*
+STRING \"(\\.|[^\\"])*[\"]
+
+%%
+"if"        return IF;
+"else"      return ELSE;
+"while"     return WHILE;
+"for"       return FOR;
+"break"     return BREAK;
+"continue"  return CONTINUE;
+"return"    return RETURN;
+
+"+"   return PLUS;
+"-"   return MINUS;
+"*"   return INMULTIT;
+"/"   return IMPARTIT;
+"="   return EGAL;
+"%"   return MOD;
+
+"<"   return MAI_MIC;
+">"   return MAI_MARE;
+"<="  return MAI_MIC_EGAL;
+">="  return MAI_MARE_EGAL;
+"=="  return EGAL_LOGIC;
+"!="  return NOT_EGAL;
+"<>"  return NOT_EGAL;
+
+"and"  return AND;
+"or"  return OR;
+"not"   return NOT;
+
+"(" return ROTUNDA_DESCHISA;
+")" return ROTUNDA_INCHISA;
+"[" return PATRATA_DESCHISA;
+"]" return PATRATA_INCHISA;
+"{" return ACOLADA_DESCHISA;
+"}" return ACOLADA_INCHISA;
+
+":" return DOUA_PUNCTE;
+"," return VIRGULA;
+"." return PUNCT;
+
+"def"    return DEF;
+"class"  return CLASS;
+"pass"   return PASS;
+
+"in"  return IN;
+"range"  return RANGE;
+
+"__init__" return INIT;
+"__name__" return NAME;
+
+
+{COMENTARIU_LINIE}   { printf ("Comentariu: %s\n", yytext);}
+{NAME}               { strcpy (yylval.sir, yytext);       return IDENTIFICATOR; }
+{CIFRA}+             { yylval.intreg = atoi (yytext);     return INTREG; }
+{NUMAR}              { yylval.intreg = atoi (yytext);     return REAL; }
+{STRING}             { strcpy (yylval.sir, yytext);       return STRING; }
+{CARACTER}           { yylval.caracter = yytext[1];       return CARACTER; }
+{BLANK}
+.                    printf ("UNKNOWN  %s\n", yytext);
+%%
+
+
+
+
+
+
+
+
+%{ bison_parser.y }%
+%{
   #include <stdio.h>
   #include <string.h>
 
@@ -240,3 +346,102 @@ void yyerror (char const *s) {
 int main() {
     yyparse();
 }
+
+
+
+
+
+
+
+
+
+%{ commands.sh}%
+flex lex.l
+bison -d bison_parser.y
+gcc lex.yy.c bison_parser.tab.c -lfl -o executabil.exe
+./executabil.exe < test.py
+
+
+
+
+
+
+
+
+%{ test.py }%
+#comentariu pe o singura linie cu #
+
+def functia1 ():
+    print ("mesaj1")
+
+def functia2 (a):
+    print ("mesaj2")
+
+def functia3 (a, b):
+    print ("mesaj3")
+
+def functia3 (a, b = "parametru implicit"):
+    print ("mesaj4")
+
+def functia4 ():
+    print ("mesaj5")
+
+def functia5 ():
+    while a == b :
+        for i in range (1, 10):
+            for i in range (20):
+                for i in x:
+                    if c == d:
+                        print ("mesaj9")
+
+class A():
+    def __init__ (self):
+        print ("mesaj6")
+
+class B :
+    def __init__ (self):
+        print ("mesaj7")
+
+class C (A):
+    x = 0
+    def __init__ (self):
+        print ("mesaj8")
+    def calcul (self, multi = 5):
+        y = (x + 1) * multi
+        z = y % 2
+        self.x = z
+    def afis (self):
+        print (self.x)
+    def functia6 ():
+        while a == b :
+            for i in range (1, 10):
+                for i in range (20):
+                    for i in x:
+                        if c == d:
+                            print ("mesaj9")
+
+
+if __name__ == "__main__" :
+    a = 1
+    b = 1
+    v = [ 0 for i in range (10) ]
+    v = [ 0 for i in range (1, 10) ]
+    v = [ 0 for i in j ]
+    while a == b :
+        for i in range (1, 10):
+            v[i] = i * 2
+            for i in range (20):
+                for i in v:
+                    c = i
+                    d = c + 4
+                    if c == d:
+                        print ("mesaj3")
+                        a = 2
+                        b = a
+                        c = a * 3 + 1
+                        d = a % b
+                if a != b:
+                    print ("mesaj10")
+                if not (a < b) :
+                    print ("mesaj11")
+    f = not a

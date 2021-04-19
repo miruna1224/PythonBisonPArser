@@ -59,13 +59,16 @@ STRING \"(\\.|[^\\"])*[\"]
 "in"  return IN;
 "range"  return RANGE;
 
+"__init__" return INIT;
+"__name__" return NAME;
 
-{COMENTARIU_LINIE}   printf("Comentariu: %s\n", yytext);
+
+{COMENTARIU_LINIE}   { printf ("Comentariu: %s\n", yytext);}
 {NAME}               { strcpy (yylval.sir, yytext);       return IDENTIFICATOR; }
 {CIFRA}+             { yylval.intreg = atoi (yytext);     return INTREG; }
 {NUMAR}              { yylval.intreg = atoi (yytext);     return REAL; }
 {STRING}             { strcpy (yylval.sir, yytext);       return STRING; }
 {CARACTER}           { yylval.caracter = yytext[1];       return CARACTER; }
 {BLANK}
-.                    printf ("Simbol necunoscut: %s\n", yytext);
+.                    printf ("UNKNOWN  %s\n", yytext);
 %%
