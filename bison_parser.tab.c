@@ -491,7 +491,7 @@ static const yytype_uint8 yyrline[] =
      174,   175,   179,   180,   181,   182,   183,   184,   185,   186,
      187,   188,   189,   190,   191,   192,   193,   194,   195,   199,
      200,   201,   202,   203,   204,   205,   206,   210,   211,   212,
-     213,   214,   217,   218,   219,   223,   224,   228,   229
+     213,   214,   218,   219,   220,   224,   225,   229,   230
 };
 #endif
 
@@ -1643,19 +1643,19 @@ yyreduce:
     break;
 
   case 82:
-#line 217 "bison_parser.y" /* yacc.c:1646  */
+#line 218 "bison_parser.y" /* yacc.c:1646  */
     { printf("A fost declarata o clasa noua: %s\n", (yyvsp[-4].sir)); }
 #line 1649 "bison_parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 218 "bison_parser.y" /* yacc.c:1646  */
+#line 219 "bison_parser.y" /* yacc.c:1646  */
     { printf("A fost declarata o clasa noua: %s\n", (yyvsp[-5].sir)); }
 #line 1655 "bison_parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 219 "bison_parser.y" /* yacc.c:1646  */
+#line 220 "bison_parser.y" /* yacc.c:1646  */
     { printf("A fost declarata o clasa noua: %s\n", (yyvsp[-2].sir)); }
 #line 1661 "bison_parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1889,7 +1889,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 231 "bison_parser.y" /* yacc.c:1906  */
+#line 232 "bison_parser.y" /* yacc.c:1906  */
 
 
 

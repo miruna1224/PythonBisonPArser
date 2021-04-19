@@ -21,7 +21,6 @@ grupa 334, semigrupa 1
 
 
 %{ lex.l }%
-
 %{
     #include <stdio.h>
     #include <string.h>
@@ -95,8 +94,6 @@ STRING \"(\\.|[^\\"])*[\"]
 {BLANK}
 .                    printf ("UNKNOWN  %s\n", yytext);
 %%
-
-
 
 
 
@@ -193,6 +190,17 @@ instructiuni:
   | instructiune;
 
 
+instructiune:
+  expresie
+  | IDENTIFICATOR_COMPUS
+  | if
+  | while_for
+  | salt_end
+  | declarare_variabila
+  | declarare_functie
+  | declarare_clasa;
+
+
 declarare_variabila:
     declarator EGAL expresie                              { printf ("Variabila initializata: %s\n", $1); };
 
@@ -227,17 +235,6 @@ parametru:
 
 
 
-instructiune:
-  expresie
-  | IDENTIFICATOR_COMPUS
-  | if
-  | while_for
-  | salt_end
-  | declarare_variabila
-  | declarare_functie
-  | declarare_clasa;
-
-
 if:
     IF  expresie DOUA_PUNCTE instructiune { printf("Instructiune If\n"); };
 
@@ -251,11 +248,34 @@ while_for:
     | FOR  IDENTIFICATOR IN RANGE ROTUNDA_DESCHISA IDENTIFICATOR_COMPUS VIRGULA IDENTIFICATOR_COMPUS ROTUNDA_INCHISA DOUA_PUNCTE instructiune     { printf ("Am intalnit instructiunea For\n"); };
 
 
+%type <sir> IDENTIFICATOR_COMPUS;
+IDENTIFICATOR_COMPUS:
+    IDENTIFICATOR                                                                                    { strcpy ($$, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR                                                       { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR ROTUNDA_DESCHISA argumente ROTUNDA_INCHISA            { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Apelez functia \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA IDENTIFICATOR PATRATA_INCHISA        { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
+    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA INTREG PATRATA_INCHISA               { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); };
+
+
+argumente:
+    %empty
+    | tip_argumente
+    | argumente VIRGULA tip_argumente;
+
+
+tip_argumente:
+   INTREG
+   | REAL
+   | STRING
+   | CARACTER
+   | IDENTIFICATOR_COMPUS;
+
+
 salt_end:
-    BREAK
-    | CONTINUE
-    | RETURN
-    | RETURN expresie;
+    BREAK                 { printf ("Instructiune de salt\n");}
+    | CONTINUE            { printf ("Instructiune de salt\n");}
+    | RETURN              { printf ("Instructiune de salt\n");}
+    | RETURN expresie     { printf ("Instructiune de salt\n");};
 
 
 expresie:
@@ -278,15 +298,6 @@ expresie:
     | CARACTER                                                                  { printf ("Caracter: %c\n", $1); };
 
 
-%type <sir> IDENTIFICATOR_COMPUS;
-IDENTIFICATOR_COMPUS:
-    IDENTIFICATOR                                                                             { strcpy ($$, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR                                                { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR ROTUNDA_DESCHISA argumente ROTUNDA_INCHISA     { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Apelez functia \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA IDENTIFICATOR PATRATA_INCHISA { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); }
-    | IDENTIFICATOR_COMPUS PUNCT IDENTIFICATOR PATRATA_DESCHISA INTREG PATRATA_INCHISA        { strcpy ($$, $1); strcat ($$, "."); strcat ($$, $3); printf ("Accesez membrulul \"%s\" clasei: %s\n", $3, $1); };
-
-
 R:
     OR
     | AND
@@ -304,20 +315,6 @@ A:
     | INMULTIT
     | IMPARTIT
     | MOD;
-
-
-argumente:
-    %empty
-    | tip_argumente
-    | argumente VIRGULA tip_argumente;
-
-
-tip_argumente:
-   INTREG
-   | REAL
-   | STRING
-   | CARACTER
-   | IDENTIFICATOR_COMPUS;
 
 
 declarare_clasa:
@@ -346,6 +343,7 @@ void yyerror (char const *s) {
 int main() {
     yyparse();
 }
+
 
 
 
@@ -445,3 +443,4 @@ if __name__ == "__main__" :
                 if not (a < b) :
                     print ("mesaj11")
     f = not a
+    return a
