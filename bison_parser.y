@@ -87,6 +87,17 @@ instructiuni:
   | instructiune;
 
 
+instructiune:
+  expresie
+  | IDENTIFICATOR_COMPUS
+  | if
+  | while_for
+  | salt_end
+  | declarare_variabila
+  | declarare_functie
+  | declarare_clasa;
+
+
 declarare_variabila:
     declarator EGAL expresie                              { printf ("Variabila initializata: %s\n", $1); };
 
@@ -102,7 +113,7 @@ declarator :
 
 
 %type <sir> declarare_functie;
-declarare_functie:
+declarare_functie: 
     IF NAME EGAL_LOGIC STRING DOUA_PUNCTE instructiune                                         { strcpy($$, $4); printf ("Declarare modul %s\n", $4); }
     | DEF INIT ROTUNDA_DESCHISA parametrii ROTUNDA_INCHISA DOUA_PUNCTE instructiune            { printf ("A fost declarat un constructor \n"); }
     | DEF IDENTIFICATOR ROTUNDA_DESCHISA parametrii ROTUNDA_INCHISA DOUA_PUNCTE instructiune   { printf ("A fost declarata functia %s\n", $2); }
@@ -119,17 +130,6 @@ parametru:
     | parametru VIRGULA IDENTIFICATOR          { strcpy($$, $3); printf ("Parametru: %s\n", $3); }
     | parametru VIRGULA declarare_variabila    {  printf ("Variabila initializata este parametru implicit \n"); };
 
-
-
-instructiune:
-  expresie
-  | IDENTIFICATOR_COMPUS
-  | if
-  | while_for
-  | salt_end
-  | declarare_variabila
-  | declarare_functie
-  | declarare_clasa;
 
 
 if:
