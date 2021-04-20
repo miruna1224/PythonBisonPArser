@@ -75,3 +75,4 @@ if __name__ == "__main__" :
                     print ("mesaj11")
     f = not a
     return a
+    0 = a

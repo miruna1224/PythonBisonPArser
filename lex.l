@@ -37,8 +37,8 @@ STRING \"(\\.|[^\\"])*[\"]
 "!="  return NOT_EGAL;
 "<>"  return NOT_EGAL;
 
-"and"  return AND;
-"or"  return OR;
+"and"   return AND;
+"or"    return OR;
 "not"   return NOT;
 
 "(" return ROTUNDA_DESCHISA;
@@ -56,7 +56,7 @@ STRING \"(\\.|[^\\"])*[\"]
 "class"  return CLASS;
 "pass"   return PASS;
 
-"in"  return IN;
+"in"     return IN;
 "range"  return RANGE;
 
 "__init__" return INIT;
